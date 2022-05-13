@@ -50,7 +50,7 @@ MockMvc를 주입하기위해  사용된 ```@AutoConfigureMockMvc```와 ```@Spri
 
 그리고 실제 포트는 자동으로 TestRestTemplate를 위한 기본URL에 설정된다.
 
-## Add Production-grade Services
+### Add Production-grade Services
 스부는 health, audits, beans,..등의 서비스는 actuator module과 함께 제공한다.
 
 ```groovy
@@ -115,6 +115,9 @@ $ spring run app.groovy
 스부는 동적으로 핵심 애노테이션들과 코드를 넣어서 실행한다. 
 
 GroovyGrape[^GroovyGrape]를 사용해서 앱을 실행하기 위한 라이브러리를 받는다.
+
+## 보안 웹
+
 
 ## Thymeleaf기초
 controller에 등록된 html은 ```templates/~```에서 찾는다.
