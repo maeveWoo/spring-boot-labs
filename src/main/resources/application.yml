@@ -14,6 +14,14 @@ spring:
       format_sql: true
       ddl-auto: none
 
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    jmx:
+      exposure:
+        include: "health,info,shutdown"
 logging:
   level:
     org:

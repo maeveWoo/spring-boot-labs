@@ -1,6 +1,7 @@
 # spring-boot-labs
 
 ## Index
+- [SpringBoot기초](#SpringBoot기초)
 - [Thymeleaf기초](#Thymeleaf기초)
 - [컴포넌트스캔](#컴포넌트스캔)
 - [빈 충돌 상황](#빈-충돌-상황)
@@ -8,6 +9,83 @@
 
 ---
 - [의문 리스트](#의문-리스트)
+
+## SpringBoot기초
+```@SpringBootApplication```은 아래 어노테이션을 포함하고는 편리한 어노테이션이다.
+- ```@Configuration``` : application context에대한 빈 정의의 소스로, 클래스에 태그를 한다.
+- ```@EnableAutoConfiguration``` : 클래스 패스 세팅, 다른 빈들과 다양한 프로퍼티 세팅을 기반으로 빈을 등록하게 한다.
+> 예를들어 spring-webmvc 가 클래스패스에 있으면, 이 어노테이션은 웹 어플리케이션으로 플래그하고, DispatcherServlet세팅을과 같은 핵심 동작을 활성화한다.
+- ```@ComponentScan``` : 스프링이 다른 컴포넌트들과, 설정들과 서비스들을 컨트롤러에게 찾도록 한다.
+
+### Run the Application
+gradle 기반
+```terminal
+./gradlew bootRun
+```
+
+maven
+```terminal
+./mvnw spring-boot:run
+```
+
+### Add Unit Tests
+```MockMvc```는  Spring Test에서 왔다. 이것은 편리한 빌더 클래스들과 HTTP request들을 DispatcherServlet에 보낼 수 있게한다.
+그리고 결과에 대한 assertions을 만들어준다.
+
+MockMvc를 주입하기위해  사용된 ```@AutoConfigureMockMvc```와 ```@SpringBootTest``` 사용을 기록하자.
+
+```@SpringBootTest```를 사용하면, 전체 어플리케이션 컨텍스트가 생성되도록 요청한다.
+
+대안으로 ```@WebMvcTest```를 사용하면 컨텍스트의 웹 계층만 생성하도록 스프링부트에 요청한다.
+
+이 두가지 경우 모두, 스프링 부트는 자동으로 어플리케이션의 메인 어플리케이션 클래스로 위치하려 시도한다.
+
+하지만 개발자는 덮어쓰거나, 약간의 다른 설정을 할 수 있게 한다.
+
+뿐만아니라, 스프링부투를 사용해 풀스택 통합테스트를 작성할 수 있게, HTTP Request cycle을 모킹한다.
+
+[참고](src/test/java/io/springbootlabs/app/web/in/HelloControllerTestIT.java)
+
+내장서버는 ```webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT```때문에 랜덤 포트로 시작된다.
+
+그리고 실제 포트는 자동으로 TestRestTemplate를 위한 기본URL에 설정된다.
+
+## Add Production-grade Services
+스부는 health, audits, beans,..등의 서비스는 actuator module과 함께 제공한다.
+
+```groovy
+implementation 'org.springframework.boot:spring-boot-starter-actuator'
+```
+이 위존성을 추가하고 bootRun을 실행하면, 새로운 RESTful 엔드포인트들이 어플리케이션에 추가된걸 볼 수 있다.
+
+```
+management.endpoint.configprops-org.springframework.boot.actuate.autoconfigure.context.properties.ConfigurationPropertiesReportEndpointProperties
+management.endpoint.env-org.springframework.boot.actuate.autoconfigure.env.EnvironmentEndpointProperties
+management.endpoint.health-org.springframework.boot.actuate.autoconfigure.health.HealthEndpointProperties
+management.endpoint.logfile-org.springframework.boot.actuate.autoconfigure.logging.LogFileWebEndpointProperties
+management.endpoints.jmx-org.springframework.boot.actuate.autoconfigure.endpoint.jmx.JmxEndpointProperties
+management.endpoints.web-org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties
+management.endpoints.web.cors-org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties
+management.health.diskspace-org.springframework.boot.actuate.autoconfigure.system.DiskSpaceHealthIndicatorProperties
+management.info-org.springframework.boot.actuate.autoconfigure.info.InfoContributorProperties
+management.metrics-org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties
+management.metrics.export.simple-org.springframework.boot.actuate.autoconfigure.metrics.export.simple.SimpleProperties
+management.server-org.springframework.boot.actuate.autoconfigure.web.server.ManagementServerProperties
+```
+actuator는 다음을 노출한다.
+- actuator/health
+- actuator
+
+```/actuator/shutdown``` 엔드포인트도 있다, 하지만 이는 JMX[^JMX]를 통해서만 볼 수 있다.
+이를 HTTP 엔트포인트로 만들기위해 ```management.endpoint.shutdown.enable=true``` 를 어플리케이션 프로퍼티에 추가하자.
+그리고 ```management.endpoints.web.exposure.include=health,info,shutdown``` 요것도 노출시키자.
+그러나, 너는 공개 어플리케이션에서 shutdown 엔드포인트를 활성화하면 안될 수도 있다.
+
+> 안대는데?
+
+### JAR 지원 및 Groovy 지원
+[^SpringBoot의 로더 모듈] 덕분에 기존의 WAR 파일 배포를 지원할 뿐만 아니라 실행 가능한 JAR를 함께 넣을 수 있다.
+
 
 ## Thymeleaf기초
 controller에 등록된 html은 ```templates/~```에서 찾는다.
@@ -62,3 +140,7 @@ public void $EXPR$() {
 ## 의문 리스트
 [^1]: conclictController conflict2()동작함.
 ```@GetMapping("!Captitalize")```있다고 빈이 등록됨... 뭥미?
+
+[^JMX]: [Java Management eXtension](https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/production-ready-jmx.html)
+
+[^SpringBoot의 로더 모듈] : 
