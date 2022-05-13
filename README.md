@@ -114,7 +114,7 @@ $ spring run app.groovy
 
 스부는 동적으로 핵심 애노테이션들과 코드를 넣어서 실행한다. 
 
-[GroovyGrape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)[^2]를 사용해서 앱을 실행하기 위한 라이브러리를 받는다.
+GroovyGrape[^GroovyGrape]를 사용해서 앱을 실행하기 위한 라이브러리를 받는다.
 
 ## Thymeleaf기초
 controller에 등록된 html은 ```templates/~```에서 찾는다.
@@ -173,5 +173,5 @@ public void $EXPR$() {
 
 [^JMX]: [Java Management eXtension](https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/production-ready-jmx.html)
 
-[^SpringBootLoaderModule]: 
-[^2]: 침고이는 Groovy Grape
+[^SpringBootLoaderModule]: Spring-boole-loader 모듈은 실행가능 jar와 war파일을 지원한다. [Docs](https://docs.spring.io/spring-boot/docs/current/reference/html/executable-jar.html)
+[^GroovyGrape]: Grape는 Groovy에 내장되있는 JAR 종속성 매니저이다. [Docs](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
