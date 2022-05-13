@@ -84,13 +84,43 @@ actuator는 다음을 노출한다.
 > 안대는데?
 
 ### JAR 지원 및 Groovy 지원
-[^SpringBoot의 로더 모듈] 덕분에 기존의 WAR 파일 배포를 지원할 뿐만 아니라 실행 가능한 JAR를 함께 넣을 수 있다.
+[^SpringBoot-loader-module] 덕분에 기존의 WAR 파일 배포를 지원할 뿐만 아니라 실행 가능한 JAR를 함께 넣을 수 있다.
 
+```spring-boot-gradle-plugin```, ```spring-boot-maeven-plugin```을 통해 이둘을 데모를 지원하는 다양한 가이드가있다.
+
+하나의 파일만큼 작은 Spring MVC  web 어플리케이션을 빌드할 수 있게, 스부는 Groovy도 지원한다.
+
+(와씨 대박!!)
+
+root 경로에 app.groovy를 생성하고 다음코드를 넣는다.
+```groovy
+@RestController
+class ThisWillActuallyRun {
+
+    @GetMapping("/")
+    String home() {
+        return "Hello, World!"
+    }
+
+}
+```
+
+먼저 [Springboot CLI를 설치](https://plein-de-verite.tistory.com/165)(mac용)
+
+아래 커멘드 실행
+```
+$ spring run app.groovy
+```
+
+스부는 동적으로 핵심 애노테이션들과 코드를 넣어서 실행한다. 
+
+[GroovyGrape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)[^2]를 사용해서 앱을 실행하기 위한 라이브러리를 받는다.
 
 ## Thymeleaf기초
 controller에 등록된 html은 ```templates/~```에서 찾는다.
 
 ## 컴포넌트스캔
+
 ### Scope
 - ```@ComponentScan``` 어노테이션이 있는 파일의 패키지 아래를 찾는다.
 - ```basePackages``` / ```basePackageClasses```로 지정도 가능
@@ -121,7 +151,7 @@ controller에 등록된 html은 ```templates/~```에서 찾는다.
 )
 ```
 FilterType 옵션
-- ```ANNOTATION``` : 기본값, 어노테이션을 인식해 동잦ㄱ
+- ```ANNOTATION``` : 기본값, 어노테이션을 인식해 동작
 - ```ASSIGNABLE_TYPE``` : 지정한 타입과 자식 타입을 인식해 동작
 - ```ASPECTJ``` : AspectJ 패턴 사용
 - ```REGEX``` : 정규 표현식
@@ -143,4 +173,5 @@ public void $EXPR$() {
 
 [^JMX]: [Java Management eXtension](https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/production-ready-jmx.html)
 
-[^SpringBoot의 로더 모듈] : 
+[^SpringBoot-loader-module]:
+[^2]: 침고이는 Groovy Grape
