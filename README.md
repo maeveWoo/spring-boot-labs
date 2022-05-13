@@ -84,7 +84,7 @@ actuator는 다음을 노출한다.
 > 안대는데?
 
 ### JAR 지원 및 Groovy 지원
-[^SpringBootLoaderModule] 덕분에 기존의 WAR 파일 배포를 지원할 뿐만 아니라 실행 가능한 JAR를 함께 넣을 수 있다.
+SpringBoot Loader Module[^SpringBootLoaderModule] 덕분에 기존의 WAR 파일 배포를 지원할 뿐만 아니라 실행 가능한 JAR를 함께 넣을 수 있다.
 
 ```spring-boot-gradle-plugin```, ```spring-boot-maeven-plugin```을 통해 이둘을 데모를 지원하는 다양한 가이드가있다.
 
@@ -173,5 +173,5 @@ public void $EXPR$() {
 
 [^JMX]: [Java Management eXtension](https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/reference/html/production-ready-jmx.html)
 
-[^SpringBootLoaderModule]:
+[^SpringBootLoaderModule]: 
 [^2]: 침고이는 Groovy Grape
