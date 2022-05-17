@@ -2,6 +2,7 @@
 
 ## Index
 - [SpringBoot기초](#SpringBoot기초)
+- [Spring Security Architecture](#Spring-Security-Architecture)
 - [Thymeleaf기초](#Thymeleaf기초)
 - [컴포넌트스캔](#컴포넌트스캔)
 - [빈 충돌 상황](#빈-충돌-상황)
@@ -116,8 +117,155 @@ $ spring run app.groovy
 
 GroovyGrape[^GroovyGrape]를 사용해서 앱을 실행하기 위한 라이브러리를 받는다.
 
-## 보안 웹
+## Spring Security Architecture
+애플리케이션 보인은 인증(Authentication : 당신은 누구?)과 권한 부여(인가)(Authorization : 당신은 뭘 할 수 있음?)라는 두 가지 독립적인 문제로 요약된다. 
 
+때때로 사람들은 "권한 부여(인가)"대신 "접근 관리"라고도 한다.
+
+Spring Security는 인증과 인가를 분리하도록 설계뙨 아키텍처가 있으며, 이는 이둘에 전략과 확장 포인트를 갖게한다.
+
+### 인증(Authentication)
+인증을 위한 주 전략 인터페이스는 ```AuthenticationManager```이다. ```AuthenticationManager```는 하나의 메소드만 가진다.
+
+```java
+public interface AuthenticationManager {
+  Authentication authenticate(Authentication authentication)
+          throws AuthenticationException;
+}
+```
+
+```AuthenticationManager```은 ```authenticate()``` 메소드로 3가지 일을 할 수 있다.
+- 입력한 값이 유효한 원칙(principal)인지 검증할 수 있다면, ```Authentication```(일반적으로 authenticated=true와 함께)을 반환
+- 입력한 값이 유효하지 않은 원칙임을 확인한다면, ```AuthenticationException```을 던진다.
+- 결정할 수 없을 경우 ```null```을 반
+
+```AuthenticationException```은 Runtime Exception이다. 
+
+```AuthenticationException```은 보통 일반적인 방법으로 어플리케이션에서 스타일이나, 어플리케이션의 목적에 따라 처리된다.
+
+즉, 사용자의 코드는 일반적으로 이 익셉션을 잡거나 핸들링하기를 바라지 않는다.
+
+예를들어, 웹 UI는 인증이 실패했다는 페이지를 렌더링할 수 있고,  ```WWW-Authenticate```header가 와 같이(같이 안올 슈도 있음), backend HTTP는 401 응답을 줄것이다.
+
+더 일반적인 ```AuthenticationManager```의 구현은 ```ProviderManager```이다.
+
+```ProviderManager```은 ```AuthenticationProvider```한 인스턴스 체인에게 위임을 한다.
+
+```AuthenticationProvider```는 ```AuthenticationManager```과 약간 비슷하지만, 다른 메서드를 갖는다.
+
+이 메서드는 ```AuthenticationProvider```이 주어진 ***인증타입***을 지원하는지 호출자에게 물을 수 있게 허락한다.
+```java
+public interface AuthenticationProvider {
+
+  Authentication authenticate(Authentication authentication)
+          throws AuthenticationException;
+
+  boolean supports(Class<?> authentication);
+}
+```
+이 ```supports()```메소드의  ```Class<?>``` 인자는 실제로```Class<? extends Authentication>```이다.
+(이 인자는 authenticate() 메소드를 지원하는지만 물어본다.)
+
+```ProviderManager```는 ```AuthenticationProviders```의 체인에게 같은 애플리케이션이 위임을 통해 여러개의 다른 인증 메커니즘을 제공할 수 있다.
+
+만약 ```ProviderManager```가 인증 인스턴스의 타입 일부를 인식하지 못하면, 이는 넘어간다.(skip)
+
+```ProviderManager``` 선택적으로 부모를 같을 수 있으며. 이는 만약 모든 제공자가 null을 반환한다면 고려해볼 수 있다.
+(뭔소리야 제공자가 전부 null을 반환하면 부모를 갖는게 좋다는 뜻인듯)
+
+만약 부모가 유효하지 않다면, null 인증 결과는 ```AuthenticationException```이다.
+
+때때로, 어플리케이션은 보호된 리소스의 논리적 그룹을 갖는다.(ex: path pattern 매칭과 관련된 모든 웹 자원)
+
+그리고 각 그룹은 그들의 고유한 ```AuthenticationManager```를 갖는다.
+
+자주, 각각의 ```AuthenticationManager```는 ```ProviderManager```이고,  이들은 부모를 공유한다.
+
+이 부모는 "global"자원의 한 종류로, 모든 제공자에게 예비품(fallback)처럼 동작한다.
+
+### Customizing Authentication Managers
+스프링 시큐러티는 사용자 어플리케이선에 빠르게 일반적인 인증 매니저의 특징을 셋업할 수 있도록 몇몇 설정을 제공한다.
+
+가장 일반적으로 사용되는 헬퍼는 ```AuthenticationManagerBuilder```이다. 
+
+```AuthenticationManagerBuilder```는 인메모리, JDBC, LDAP 사용자 세부사항 또는 커스텀한```UserDetailService```추가 셋업에 훌륭하다.
+
+다음 예제는 global(parent) ```AuthenticationManager```설정을한 어플리케이션을 보여준다.
+
+```java
+import javax.sql.DataSource;
+
+@Configuration
+public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+  ... // web stuff  here
+
+  @Autowired
+  public void initialize(AuthenticationManagerBuilder builder, DataSource dataSource) {
+      builder.jdbcAuthentication().dataSource(dataSource).withUser("dave").password("secret").roles("USER");
+  }
+}
+```
+이 예제는 웹 어플리케이션과 관련있다. 하지만, ```AuthenticationManagerBuilder```는 더 넓게 쓰일 수 있다.([web security](https://spring.io/guides/topicals/spring-security-architecture/#web-security)[^web security])
+
+이```AuthenticationManagerBuilder```는 ```@Autowired```이다. 이 메소드는```@Bean```으로 등록됬다.
+
+이는 ```AuthenticationManager```를 global(parent)를 제공하게한다. 
+
+대조적으로 아래 예시를 보자
+
+```java
+import javax.sql.DataSource;
+
+@Configuration
+public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+
+  @Autowired
+  DataSource dataSource;
+  
+  ... // web stuff here 
+  
+  @Override
+  public void configure(AuthenticationManagerBuilder builder) {
+      builder.jdbcAuthentication().dataSource(dataSource).withUser("dave").password("secret").roles("USER");
+  }
+}
+```
+만약 설정에서 메소드에 ```@Override```를 사용했다면, ```AuthenticationManagerBuilder```는 global의 child가 될 "local"```AuthenticationManager```를 구성할 뿐이다.
+
+스부에서는 global ```AuthenticationManagerBuilder```를 다른 빈에 주입```@Autowired```할 수 있다. 
+
+그러나, local인 것을 명시적으로 노출하지 않는 한, 저렇게 주입할 수 없다.
+
+스부는 default global ```AuthenticationManager```를 제공한다.
+(사용자```AuthenticationManager```타입의 빈을 선점해서 제공하지 않는 한)
+
+이 기본값은 충분히 안전하므로 사용자 정의 global이 적극적으로 필요하지 않는 한 크게 걱정할 필요가 없다.
+
+만약 ```AuthenticationManager``` 빌드를 위해 어떤 설정을 하려한다면, global 기본값에대해 고민하지않고, 주로 사용자는 보호하려는 리소스를 위해 locally하게 만들면된다.
+
+### Authorizatiob or Access Control
+authorization의 핵심 전략은 "AccessDecisionManager"이다. 
+
+프레임워크는 3가지 구현체를 제공한다. 그리고 이 세가지는 "AccessSecisionVoter"의 체인 인스턴스에 위임한다.
+
+"ProviderManager"가 "AuthenticationProviders"에 위임하는 것과약간 비슷하다. 
+
+"AccessDecisionVoter"는 "Authentication"을 고려하고(원칙(principa을 표현)), "ConfigAttributes"로 데코레트된 "Object"를 보호한다.
+
+```java
+boolean supports(ConfigAttribute attribute);
+
+boolean supports(Class<?> clazz);
+
+int vote(Authentication authentication, S object, Collection<ConfigAttribute> attributes);
+```
+"AccessDecisionManager", "AccessDecisionVoter"의 시그니처에서 "Object"는 완전히 제네릭이다.
+
+사용자가 접근(웹 리소스나, 자바 메서드 두개는 가장 일반적인 케이스)을 원하는 어떠한 것도 표현할 수 있다.
+
+"ConfigAttributes"역시 제네릭이다. 또, 보안 "Object"의 데코레이션을 보여준다.
+
+"Object"는 그것에 접근하기 위해 필요한 권한레벨을 결정하는 메타데이터와 함께
 
 ## Thymeleaf기초
 controller에 등록된 html은 ```templates/~```에서 찾는다.
@@ -178,3 +326,4 @@ public void $EXPR$() {
 
 [^SpringBootLoaderModule]: Spring-boole-loader 모듈은 실행가능 jar와 war파일을 지원한다. [Docs](https://docs.spring.io/spring-boot/docs/current/reference/html/executable-jar.html)
 [^GroovyGrape]: Grape는 Groovy에 내장되있는 JAR 종속성 매니저이다. [Docs](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
+[^web security]: 
