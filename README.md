@@ -270,6 +270,19 @@ int vote(Authentication authentication, S object, Collection<ConfigAttribute> at
 ## Thymeleaf기초
 controller에 등록된 html은 ```templates/~```에서 찾는다.
 
+form태그와 함께 사용하는 ```th:object="${greeting}"``` 표현은 폼데이터를 수집하기 위한 모델 객체는 선언한다.
+
+@, * 가붙은 EL(?) 표현식을 잘 파악해 보자
+
+### Form Handling
+참고 : HelloController - greeting GET/POST
+
+form 요소에서 ```th:action="@{/greeting}"``` 표현은 POST "/greeting"엔드포인트로 바로간다는데.. 안감.
+
+```method="post"``` 넣어줘야 POST되는디? 기본은 GET으로 감.
+
+
+
 ## 컴포넌트스캔
 
 ### Scope
