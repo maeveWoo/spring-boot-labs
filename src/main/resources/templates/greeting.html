@@ -5,10 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p th:text="'Hello, ' + ${name} + '!'" />
 <form action="#" th:action="@{/greeting}" th:object="${greeting}" method="post">
-    <label for="id">Id: </label><input type="text" th:field="*{id}" id="id">
+    <label for="name">Name: </label><input type="text" th:field="*{name}" id="name">
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
     <label for="content">Message: </label><input type="text" th:field="*{content}" id="content">
+        <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Content Error</span>
     <input type="submit" value="Submit">
     <input type="reset" value="Reset">
 </form>

@@ -281,7 +281,15 @@ form 요소에서 ```th:action="@{/greeting}"``` 표현은 POST "/greeting"엔�
 
 ```method="post"``` 넣어줘야 POST되는디? 기본은 GET으로 감.
 
+### Validation 하기
+gradle
+```implementation 'org.springframework.boot:spring-boot-starter-validation'```
 
+#### :closed_book: ***Errors, BindingResult*** 주의 사항
+[슈퍼 간단한 예제때매 똥뻘짓하다 발견한 문서 내용](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-arguments)
+
+Errors, BindingResult: 또는, @RequestBody, @RequestPart 인자의 유효성 검사와 명령 객체(@ModelAttribute 인자)에 데이터 바인딩에서 에러에 접근하기위해 사용.
+***"Errors", "BindingResult" 인자는 유효성 검사용 메소드 인자의 직후에 위치해야되는걸 반드시 확실히해라***
 
 ## 컴포넌트스캔
 

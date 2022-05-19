@@ -1,11 +1,20 @@
 package io.springbootlabs.app.web.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.sun.istack.NotNull;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
+@Data
+@NoArgsConstructor
 public class Greeting {
-    private long id;
+    @NotNull
+    @Size(min = 2, max = 30)
+    private String name;
+
+    @NotNull
+    @Min(18)
     private String content;
 }
