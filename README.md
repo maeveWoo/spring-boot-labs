@@ -4,6 +4,7 @@
 - [SpringBoot기초](#SpringBoot기초)
 - [Spring Security Architecture](#Spring-Security-Architecture)
 - [Thymeleaf기초](#Thymeleaf기초)
+- [파일업로드](#파일업로드)
 - [컴포넌트스캔](#컴포넌트스캔)
 - [빈 충돌 상황](#빈-충돌-상황)
 - [라이브템플릿 세팅](#라이브템플릿-세팅)
@@ -266,6 +267,15 @@ int vote(Authentication authentication, S object, Collection<ConfigAttribute> at
 "ConfigAttributes"역시 제네릭이다. 또, 보안 "Object"의 데코레이션을 보여준다.
 
 "Object"는 그것에 접근하기 위해 필요한 권한레벨을 결정하는 메타데이터와 함께
+
+## 파일업로드
+스프링 부트 MVC 어플리케이션은(thymeleaf, spring-boot-starter-web 이 추가된) 파일 업로드를 하기 위해서는 "MultipartConfigElement"를 등록해야한다.
+스부는 모두 auto-config!
+
+### Flash Attribute
+참고 자료들
+- [spring docs](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-flash-attributes)
+- [baeldung](https://www.baeldung.com/spring-web-flash-attributes)
 
 ## Thymeleaf기초
 controller에 등록된 html은 ```templates/~```에서 찾는다.

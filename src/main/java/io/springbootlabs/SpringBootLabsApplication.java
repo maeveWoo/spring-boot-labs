@@ -1,5 +1,6 @@
 package io.springbootlabs;
 
+import io.springbootlabs.domain.usecase.FileStorage;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
