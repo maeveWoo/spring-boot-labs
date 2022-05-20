@@ -146,7 +146,7 @@ public interface AuthenticationManager {
 
 즉, 사용자의 코드는 일반적으로 이 익셉션을 잡거나 핸들링하기를 바라지 않는다.
 
-예를들어, 웹 UI는 인증이 실패했다는 페이지를 렌더링할 수 있고,  ```WWW-Authenticate```header가 와 같이(같이 안올 슈도 있음), backend HTTP는 401 응답을 줄것이다.
+예를들어, 웹 UI는 인증이 실패했다는 페이지를 렌더링할 수 있고,  ```WWW-Authenticate```header가 같이(같이 안올 슈도 있음), backend HTTP는 401 응답을 줄것이다.
 
 더 일반적인 ```AuthenticationManager```의 구현은 ```ProviderManager```이다.
 
@@ -206,7 +206,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
   }
 }
 ```
-이 예제는 웹 어플리케이션과 관련있다. 하지만, ```AuthenticationManagerBuilder```는 더 넓게 쓰일 수 있다.([web security](https://spring.io/guides/topicals/spring-security-architecture/#web-security)[^web security])
+이 예제는 웹 어플리케이션과 관련있다. 하지만, ```AuthenticationManagerBuilder```는 더 넓게 쓰일 수 있다.([web security](https://spring.io/guides/topicals/spring-security-architecture/#web-security)[^WebSecurity])
 
 이```AuthenticationManagerBuilder```는 ```@Autowired```이다. 이 메소드는```@Bean```으로 등록됬다.
 
@@ -235,10 +235,10 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
 스부에서는 global ```AuthenticationManagerBuilder```를 다른 빈에 주입```@Autowired```할 수 있다. 
 
-그러나, local인 것을 명시적으로 노출하지 않는 한, 저렇게 주입할 수 없다.
+그러나, local인 것을 명시적으로 노출하지 않는 한, ```@Autowired```로 주입할 수 없다.
 
 스부는 default global ```AuthenticationManager```를 제공한다.
-(사용자```AuthenticationManager```타입의 빈을 선점해서 제공하지 않는 한)
+(사용자가 ```AuthenticationManager```타입의 빈을 선점해서 제공하지 않는 한)
 
 이 기본값은 충분히 안전하므로 사용자 정의 global이 적극적으로 필요하지 않는 한 크게 걱정할 필요가 없다.
 
@@ -247,11 +247,11 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 ### Authorizatiob or Access Control
 authorization의 핵심 전략은 "AccessDecisionManager"이다. 
 
-프레임워크는 3가지 구현체를 제공한다. 그리고 이 세가지는 "AccessSecisionVoter"의 체인 인스턴스에 위임한다.
+프레임워크는 3가지 구현체를 제공한다. 그리고 이 세가지는 "AccessDecisionVoter"의 체인 인스턴스에 위임한다.
 
 "ProviderManager"가 "AuthenticationProviders"에 위임하는 것과약간 비슷하다. 
 
-"AccessDecisionVoter"는 "Authentication"을 고려하고(원칙(principa을 표현)), "ConfigAttributes"로 데코레트된 "Object"를 보호한다.
+"AccessDecisionVoter"는 "Authentication"을 고려하고(원칙(principal 을 표현)), "ConfigAttributes"로 데코레트된 "Object"를 보호한다.
 
 ```java
 boolean supports(ConfigAttribute attribute);
@@ -267,6 +267,8 @@ int vote(Authentication authentication, S object, Collection<ConfigAttribute> at
 "ConfigAttributes"역시 제네릭이다. 또, 보안 "Object"의 데코레이션을 보여준다.
 
 "Object"는 그것에 접근하기 위해 필요한 권한레벨을 결정하는 메타데이터와 함께
+
+
 
 ## 파일업로드
 스프링 부트 MVC 어플리케이션은(thymeleaf, spring-boot-starter-web 이 추가된) 파일 업로드를 하기 위해서는 "MultipartConfigElement"를 등록해야한다.
@@ -357,4 +359,4 @@ public void $EXPR$() {
 
 [^SpringBootLoaderModule]: Spring-boole-loader 모듈은 실행가능 jar와 war파일을 지원한다. [Docs](https://docs.spring.io/spring-boot/docs/current/reference/html/executable-jar.html)
 [^GroovyGrape]: Grape는 Groovy에 내장되있는 JAR 종속성 매니저이다. [Docs](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
-[^web security]: 
+[^WebSecurity]: 
