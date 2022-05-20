@@ -264,9 +264,63 @@ int vote(Authentication authentication, S object, Collection<ConfigAttribute> at
 
 사용자가 접근(웹 리소스나, 자바 메서드 두개는 가장 일반적인 케이스)을 원하는 어떠한 것도 표현할 수 있다.
 
-"ConfigAttributes"역시 제네릭이다. 또, 보안 "Object"의 데코레이션을 보여준다.
+"ConfigAttributes"역시 제네릭이다. 또, 그것에 접근하기 위해 필요한 권한레벨을 결정하는 메타데이터와 함께 "Object"의 보안 데코레이션을 보여준다.
 
-"Object"는 그것에 접근하기 위해 필요한 권한레벨을 결정하는 메타데이터와 함께
+"ConfigAttribute" 는 인터페이스이다. 얘는 하나의 메서드만 갖는다(이 메서드는 제네릭이고 "String"을 반환한다.) 그래서 이 문자열은 자원의 소유자의 의도대로 암호화(encode)된다.
+
+이는 누가 그것에 접근할 수 있는지 규칙을 표현한다.
+
+유형별 "ConfigAttribute"는 사용자 역할의 이름이며("ROLE_ADMIN", "ROLE_AUDOT"같은) 그리고, 야들은 특별한 포맷("ROLE_"같은)이 있거나 평가가 필요한 표현을 보여준다.
+
+
+일반적으로 "ConfigAttributes"sms Spring Expression Language(SpEL)표현으로 사용한다.
+
+예를 들어, "isFullyAuthenticated() && hasRole('user')" 이 표현은 "AccessDecisionVoter"가 지원해준다. 
+
+"AccessDecisionVoter"는 표현을 다룰 수 있고, 그들을 위해 컨텍스트를 생성한다.
+
+ 표현법의 범위를 핸들링할 수 있게 확장하기 위해 "SecurityExpressionRoot"과 가끔 "SecurityExpressionHandler"의 커스텀 구현체를 필요로한다.
+
+### Web Security
+웹 계층에서 Spring Security는 Servlet "Filters"에 기본으로있다. 그래서, "Filters"의 역할을 먼저 보는 것이 도움이된다.
+
+아래 그림은 하나의 HTTP 요청에대한 핸들러의 유형별로 계증층을 보여준다. 
+![filter](img/filters.png)
+
+클라이언트는 어플리케이션에 하나의 요청을 보내고, 컨테이나는 어떤 필터와 어떤 서블렛을 적용할지를 요청 URI의 경로를 기반으로 결정한다. 
+
+대게 하나의 서블렛은 하나의 요청을 다룰 수 있지만, 필터는 체인으로 형성되고, 정렬된다.
+
+사실 필터는 만약에 요청을 자체적으로 처리하길 원하면, 나머지 체인을 거부할 수 있다.
+
+필터는 요청과 응답(다운스트림 필터와 서블릿에서 사용되는)을 변경할 수 있다.(?)
+
+필터체인의 정렬은 굉장히 중요하다. 스프링 부트는 이것을 두가지 매커니즘으로 관리한다.
+
+```@Bean```타입의 필터는 ```@Order```를 갖거나 ```Ordered```를 구현한다.
+
+그리고, 얘들은 ```FilterRegisterationBean```의 한 부분이 될 수 있다. ```FilterRegisterationBean```은 스스로 자신의 API의 한 부분으로 요청한다.
+
+어떤 만들어진 필터는 도움요청(help signal)에 충실하게 정의되어있다. 
+
+예를들어, Spring Session의```SessionRepositoryFilter```는 "Integer.MIN_VALUE + 50"의 "DEFAULT_ORDER"를 갖는다.
+
+이는 체인에서 좀더 앞서고 싶지만, 다른 필터들이 나오기 전에 규칙을 어기지 않는다.
+
+스프링 시큐러티는 체인에서 하나의 필터로 설치되어있다. 그리고 이는 ```FilterChainProxy```타입으로 고정(concrete)이다.
+
+스프링 부트 어플리케이션에서, security 필터는 어플리케이션 컨텍스트에서 ```@Bean```이다.
+
+그리고 야는 기본으로 설치되어있고, 모든 요청에 적용할 수 있다. 
+
+security 필터는 "SecurityProperties.DEFAULT_FILTER_ORDER" 에 의해 정의된 위치에 설치된다.
+
+"SecurityProperties.DEFAULT_FILTER_ORDER"는 "FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER"에의해 고정된다.
+
+
+
+
+
 
 
 
