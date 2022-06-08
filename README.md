@@ -231,6 +231,9 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
   }
 }
 ```
+> :warning: In Spring-security 5.7 M2 deprecated ```WebSecurityConfigurerAdapter``` 사용자가 컴포넌트 기반의 security 설정을 하도록 권장하고있다.
+> docs : https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
+
 만약 설정에서 메소드에 ```@Override```를 사용했다면, ```AuthenticationManagerBuilder```는 global의 child가 될 "local"```AuthenticationManager```를 구성할 뿐이다.
 
 스부에서는 global ```AuthenticationManagerBuilder```를 다른 빈에 주입```@Autowired```할 수 있다. 
@@ -317,11 +320,101 @@ security 필터는 "SecurityProperties.DEFAULT_FILTER_ORDER" 에 의해 정의�
 
 "SecurityProperties.DEFAULT_FILTER_ORDER"는 "FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER"에의해 고정된다.
 
+> (뭐라는거야)
 
+![spring security filter](img/security-filters.png)
 
+Spring Security는 하나의 물리적인 필터이다. 그러나 내부 필터들의 체인에 과정을 위임시킨다.
 
+사실, security 필터에서 간접적인 계층이 하나 더 있다. 
+얘는 "DelegatingFilterProxy"라는 컨테이너에서 설치된다. 얘는 Spring ```@Bean```일 필요가 없다.
 
+이 프록시는 "FilterChainProxy"에게 위임을한다. "FilterChainProxy"는 항상 ```@Bean```이고, "springSecurityFilterChain"이라는 고정된 이름을 갖는다.
 
+이 "FilterChainProxy"는 내부적으로 필터의 체인으로 구설된 보인 로직을 전부 포함한다.
+
+모든 필터는 같은 API를 갖는다.(필터들은 전부 서블릿 설명서의 "Filter" 인터페이스로 구현된다.), 모든 필터는 나머지 체인들을 거부할 수 있는 기회가있다.
+
+"FilterChainProxy"와 같은 탑레벨에서 Spring Security로 관리되는 모든 필터체인은 많을 수 있다.
+그리고, 모드 컨체이너에게 알려지지 않는다.
+
+Spring Security 필터는 필터체인의 리스트를 갖고있고, 필터와 매칭되는 첫번째 체인과 요청을 분리한다. 
+
+아래 이미지는 요청 경로 매칭에 기반한 분리(dispatch) 상황을 보여준다.
+이는 아주 일반적이지만 요청을 매칭하는것이 유일한 방법이 아니다. 
+
+이 분리(dispatch) 과정의 가장 중요한 특징은 하나의 체인만이 요청을 다른다는 것이다.
+
+![Security filters dispatch](img/security-filters-dispatch.png)
+
+Spring Security "FilterChainProxy"는 먼저 매칭되는 첫번째 체인에 요청을 분리한다.
+
+커스텀 security 설정이 없는 vanilla Spring Boot 어플리케이션은 n개의 필터 체인이있다. 보통 n = 6.
+
+첫번째 체인(n-1)은 static 자원의 패턴들을 무시한다. (/css/**, /images/**, /error 뷰 같은)
+(그 경로는 SecurityProperties에서 "security.ignored"로 사용자가 수정할 수 있다.)
+
+마지막 체인은 catch-all 경로(/**) 매칭하고, 인증의 정보를 포함하고, 인가, 예외처리, 세션 처리, 헤더 작성 등등 더 많은 작업을한다.
+
+기본(default) 체인에서 전부 11개의 필터가 있다. 일반적으로 사용자는 어떤 필터가 언제 사용되는지에 대한 걱정을 할 필요는 없다.
+
+> Spring Security 내의 모든 필터는 사실 컨테이너에게 알려지지 않았다. 이는 중요하다. 특히 Spring Boot 어플리케이션에서,
+기본적으로 모든 Filter 타입의 ```@Bean```은 컨테이너에 자동으로 등록된다. 그래서 사용자가 커스텀 필터를 security 체인에 추가하고 싶다면,
+```@Bean```을 만들지 말거나, 컨테이너가 등록을 목하도록 명시적으로 "FilterRegistrationBean"으로 감싸야한다.
+
+### 필터 페인의 생성과 커스터마이징
+Spring Boot 어플리케이션에서 기본 필터체인은 "SecurityProperties.BASIC_AUTH_ORDER"의 주문에의해 먼저 정의되있다.
+
+"security.basic.enabled=false" 세팅을 통해 완전히 설정을 끌 수 있고, 아니면 대비책으로 기본설정을 사용할 수 있다.
+그리고, 더 낮은 우선순위를 갖는(lower order) 다른 규칙을 정의할 수 있다.
+
+나중에, "WebSecurityConfigurerAdapter"또는 "WebSecurityConfigurer" 타입의 ```@Bean```을 추가할 수 있다.
+
+그리고 ```@Order```를 이용해 클래스를 데코레이트할 수 있다.
+
+:warning:  spring security 5.7 "WebSecurityConfigurerAdapter" deprecated
+
+```java
+@Configuration
+@Order(SecurityProperties.BASIC_AUTH_ORDER - 10)
+public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.antMatcher("/match1/**")
+                ...;
+    }
+}
+```
+이 빈은 Spring Security가 새로운 필터체인을 추가하고, 기본 설정 이후의 우산순위를 갖게야기한다.
+
+많은 어플리케이션은 리소스 집합에 대해 완전히 다른 접근 규칙을 가지고 있다.
+
+각 리소스의 세트는 자신들만의 유일한 순서(order)와 요청 매칭(request matcher)과 함께 "WebSecurityConfigurerAdapter"를 갖는다.
+
+만약 매칭룰리 오버랩되면, 가장 우선순위가 높은 필터체인이 이긴다.
+
+### 분리(Dispatch)와 인증을 위한 요청 매치
+security 필터 체인(="WebSecurityConfigurerAdapter)은 요청 매칭(request matcher)을 갖는다.
+얘는 HTTP 요청에 이 필터를 적용할지 말지 결정한다.
+
+특정 필터 체인을 적용하기로 결정되면, 다른 필터 체인은 적용되지 않는다.
+
+필터체인을 적용하면, "HttpSecurity" 설정에서 추가적인 매칭을 세팅하면 더 섬세하게 인가를 설정할 수 있다.
+
+```java
+@Configuration
+@Order(SecurityProperties.BASIC_AUTH_ORDER - 10)
+public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    @Override
+    protected  void configure(HttpSecurity http) throws Exception {
+        http.antMatcher("/match1/**")
+                .authorizeRequests()
+                .antMatchers("/match1/user").hasRole("USER")
+                .antMatchers("/match1/spam").hasRole("SPAM")
+                .anyRequest().isAuthenticated();
+    }
+}
+```
 
 
 ## 파일업로드
