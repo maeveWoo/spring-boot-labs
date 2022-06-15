@@ -5,6 +5,9 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+/*
+고객 정보
+ */
 @Entity
 @Getter
 @ToString
@@ -34,6 +37,9 @@ public class Customer {
 
     @Column(name = "region_type")
     private String regionType;
+
+    @OneToOne
+    private User user;
 
     protected Customer() {}
 
