@@ -1,18 +1,22 @@
 package io.springbootlabs.domain.entity;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 200, nullable = false)
     private String password;
 
+    /** 변경가능한 닉네임 **/
     @Column(length = 20, nullable = false)
     private String nickName;
 
