@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Spring Security Example</title>
-</head>
-<body>
-    <h1>Welcome!</h1>
-    <p>
-        Click <a th:href="@{/hello}">here</a> to see a greeting.
-    </p>
-    <a href="/greeting">Get your greeting here</a>
-</body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="content">
+    <section>
+        <h2>index content!</h2>
+        <p>
+            Click <a th:href="@{/hello}">here</a> to see a greeting.
+        </p>
+        <a href="/greeting">Get your greeting here</a>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+    </section>
+</th:block>
 </html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav th:fragment="nav" class="navbar navbar-expand-lg bg-light">
+    <ul class="navbar-nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${module == 'home' ? 'active' : ''}" aria-current="page" href="#">
+                home
+            </a>
+        </li>
+        <li sec:authorize="isAuthenticated()" th:classappend="${module == 'home' ? '' : 'active'}"
+            class="nav-item">
+            <a class="nav-link" href="#">
+                this is a navigator
+            </a>
+        </li>
+        <li sec:authorize="hasAnyRole('ADMIN', 'WRITE_ADMIN', 'SUPER_ADMIN')" th:classappend="${module == 'home' ? '' : 'active'}"
+            class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>
