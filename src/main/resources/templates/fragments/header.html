@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,6 +8,12 @@
 <body>
 <header th:fragment="header">
     <h1>Maeve home</h1>
+    <p sec:authorize="isAnonymous()">Hello? U Want Join Us? Click <a>Sign Up</a></p>
+    <p sec:authorize="isAuthenticated()">
+        Hey
+        <span sec:authentication="principal.nickName"></span>
+        How R U
+    </p>
 </header>
 </body>
 </html>

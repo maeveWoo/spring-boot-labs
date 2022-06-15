@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html
         xmlns:th="https://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -19,6 +18,16 @@
         <li class="nav-item">
             <a th:href="@{/login}" sec:authorize="isAnonymous()" class="nav-link">
                 login
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/sign-up}" sec:authorize="isAnonymous()" class="nav-link">
+                sign up
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/logout}" sec:authorize="isAuthenticated()" class="nav-link">
+                logout
             </a>
         </li>
         <li sec:authorize="isAuthenticated()" th:classappend="${module == 'home' ? '' : 'active'}"
