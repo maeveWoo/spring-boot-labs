@@ -19,7 +19,7 @@ public class SecurityConfiguration {
                         {
                             try {
                                 auth
-                                        .antMatchers("/login", "/actuator/health", "/test/**")
+                                        .antMatchers("/", "/login", "/actuator/health", "/test/**")
                                         .permitAll()
                                         .antMatchers("/favicon.ico", "/js/**", "/css/**", "/font-awesome/**", "/img/**", "/fonts/**", "/vendor/**", "/error")
                                         .permitAll()
@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                             }
                         }
                 )
+                .csrf().disable() // CSRF 읽고 정리
                 .httpBasic(withDefaults());
         return http.build();
     }

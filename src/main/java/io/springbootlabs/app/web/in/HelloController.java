@@ -15,6 +15,11 @@ public class HelloController {
         return "index";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
     @GetMapping("/greeting")
     public String greeting(Model model) {
         model.addAttribute("greeting", new Greeting());
