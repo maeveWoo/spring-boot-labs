@@ -1,4 +1,4 @@
-package io.springbootlabs.domain.entity;
+package io.springbootlabs.domain.user;
 
 import lombok.Getter;
 

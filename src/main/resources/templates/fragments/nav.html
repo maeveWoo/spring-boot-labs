@@ -9,57 +9,43 @@
 <body>
 <nav th:fragment="nav" class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav justify-content-center">
-                <li class="nav-item">
-                    <a th:href="@{/}"
-                       aria-current="page" href="#" class="nav-link" >
-                        home
-                    </a>
-                </li>
-                <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        File Handling
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">BMP</a></li>
-                        <li><a class="dropdown-item" href="#">Image</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">MP3</a></li>
-                    </ul>
-                </li>
-                <li sec:authorize="hasAnyRole('ADMIN','WRITE_ADMIN','SUPER_ADMIN')" class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Admin
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/login}" sec:authorize="isAnonymous()" class="nav-link">
-                        login
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/sign-up}" sec:authorize="isAnonymous()" class="nav-link">
-                        sign up
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/logout}" sec:authorize="isAuthenticated()" class="nav-link">
-                        logout
-                    </a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
-            </form>
-        </div>
+        <ul class="navbar-nav justify-content-center">
+            <li class="nav-item">
+                <a th:href="@{/}"
+                   aria-current="page" href="#" class="nav-link" >
+                    home
+                </a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    File Handling
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" th:href="@{/file/image}">Image</a></li>
+                    <li><a class="dropdown-item" th:href="@{/file/bmp}">BMP</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" th:href="@{/file/mp3}">MP3</a></li>
+                </ul>
+            </li>
+            <li sec:authorize="hasAnyRole('ADMIN','WRITE_ADMIN','SUPER_ADMIN')" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Admin
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </li>
+        </ul>
+        <form class="d-flex">
+            <button sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-sm btn-outline-primary mx-2" type="button">login</button>
+            <button sec:authorize="isAnonymous()" th:href="@{/sign-up}" class="btn btn-sm btn-outline-success mx-2" type="button">sign up</button>
+            <button sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-sm btn-outline-warning mx-2" type="button">logout</button>
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
     </div>
 </nav>
 <script>

@@ -1,9 +1,8 @@
 package io.springbootlabs.app.repository;
 
-import io.springbootlabs.domain.entity.Customer;
-import io.springbootlabs.domain.entity.CustomerType;
+import io.springbootlabs.domain.user.Customer;
+import io.springbootlabs.domain.user.CustomerType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;

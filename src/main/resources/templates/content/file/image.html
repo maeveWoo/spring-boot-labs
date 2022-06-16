@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<th:block layout:fragment="content">
+    <section>
+        <h2>Image File</h2>
+        <ol class="list-group list-group-numbered">
+            <li th:each="image: ${images}"
+                    class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div th:text="${image.name}" class="fw-bold"></div>
+                    Content for list item
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-sm">자세히 보기</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm">삭제</button>
+                </div>
+                <span th:text="|${image.size} bytes|" class="badge bg-primary rounded-pill"></span>
+            </li>
+        </ol>
+    </section>
+</th:block>>
+</html>

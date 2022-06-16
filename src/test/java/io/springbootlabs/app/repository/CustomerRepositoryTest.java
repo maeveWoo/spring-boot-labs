@@ -1,7 +1,7 @@
 package io.springbootlabs.app.repository;
 
-import io.springbootlabs.domain.entity.Customer;
-import io.springbootlabs.domain.entity.CustomerType;
+import io.springbootlabs.domain.user.Customer;
+import io.springbootlabs.domain.user.CustomerType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

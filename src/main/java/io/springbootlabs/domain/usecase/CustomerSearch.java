@@ -1,7 +1,7 @@
 package io.springbootlabs.domain.usecase;
 
-import io.springbootlabs.domain.entity.Customer;
-import io.springbootlabs.domain.entity.CustomerType;
+import io.springbootlabs.domain.user.Customer;
+import io.springbootlabs.domain.user.CustomerType;
 
 import java.util.List;
 

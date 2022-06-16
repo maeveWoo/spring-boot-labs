@@ -1,4 +1,4 @@
-package io.springbootlabs.domain.entity;
+package io.springbootlabs.domain.user;
 
 import lombok.Getter;
 
@@ -20,7 +20,7 @@ public class User {
     @Column(length = 20, nullable = false)
     private String nickName;
 
-    /** 최근 업데이 **/
+    /** 최근 업데이트 **/
     @Column(nullable = false)
     private LocalDateTime lastUpdated;
 

@@ -14,7 +14,7 @@ public class User extends org.springframework.security.core.userdetails.User imp
         this.nickName = nickName;
     }
 
-    public User(io.springbootlabs.domain.entity.User user) {
+    public User(io.springbootlabs.domain.user.User user) {
         this(user.getId(), user.getPassword(), user.getRoles(), user.getNickName());
     }
 }

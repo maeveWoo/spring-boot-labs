@@ -1,7 +1,7 @@
 package io.springbootlabs.app.web.config.security;
 
-import io.springbootlabs.domain.entity.User;
-import io.springbootlabs.domain.entity.UserRepository;
+import io.springbootlabs.domain.user.User;
+import io.springbootlabs.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
