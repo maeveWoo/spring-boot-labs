@@ -23,6 +23,7 @@ public class SecurityConfiguration {
                                         .permitAll()
                                         .antMatchers("/favicon.ico", "/js/**", "/css/**", "/font-awesome/**", "/img/**", "/fonts/**", "/vendor/**", "/error")
                                         .permitAll()
+                                        .antMatchers("/admin/**").hasAnyAuthority("ADMIN", "WRITE_ADMIN", "SUPER_ADMIN")
                                         .anyRequest().authenticated()
                                         .and()
                                         .formLogin()
