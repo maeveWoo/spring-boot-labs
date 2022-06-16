@@ -1,12 +1,15 @@
 <!DOCTYPE html>
+<html lang="en">
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
-
 <th:block layout:fragment="content">
     <section>
-        <h2>index content!</h2>
+        <h2>Result</h2>
+        <p th:text="'name: ' + ${greeting.name}" />
+        <p th:text="'content: ' + ${greeting.content}" />
+        <a href="/greeting">Submit another message</a>
     </section>
-</th:block>
+</th:block>>
 </html>

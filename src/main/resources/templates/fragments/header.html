@@ -7,12 +7,15 @@
 </head>
 <body>
 <header th:fragment="header">
-    <h1>Maeve home</h1>
-    <p sec:authorize="isAnonymous()">Hello? U Want Join Us? Click <a>Sign Up</a></p>
-    <p sec:authorize="isAuthenticated()">
+    <h1 class="d-inline-flex text-primary">Maeve home</h1>
+    <p sec:authorize="isAnonymous()" class="d-inline-flex p-2">Hello? U Want Join Us? Click <a>Sign Up</a></p>
+    <p sec:authorize="isAuthenticated()" class="fs-6 font-monospace d-inline-flex p-2">
         Hey
-        <span sec:authentication="principal.nickName"></span>
-        How R U
+        <span sec:authentication="principal.nickName" class="fw-bold mx-2"></span>
+        , How R U?
+
+        <span sec:authentication="principal.authorities[0]" class="badge text-bg-info mx-3"></span>
+<!-- NOTE: security principal 보기 <span sec:authentication="principal"></span>-->
     </p>
 </header>
 </body>
