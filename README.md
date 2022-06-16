@@ -3,7 +3,9 @@
 ## Index
 - [SpringBoot기초](#SpringBoot기초)
 - [Spring Security Architecture](#Spring-Security-Architecture)
-- [Thymeleaf기초](#Thymeleaf기초)
+- [Thymeleaf 기초](#Thymeleaf기초)
+- [Thymeleaf Security](#Thymeleaf-Security)
+- [Thymeleaf layout dialet](#Thymeleaf-layout-dialet)
 - [파일업로드](#파일업로드)
 - [컴포넌트스캔](#컴포넌트스캔)
 - [빈 충돌 상황](#빈-충돌-상황)
@@ -449,6 +451,47 @@ gradle
 
 Errors, BindingResult: 또는, @RequestBody, @RequestPart 인자의 유효성 검사와 명령 객체(@ModelAttribute 인자)에 데이터 바인딩에서 에러에 접근하기위해 사용.
 ***"Errors", "BindingResult" 인자는 유효성 검사용 메소드 인자의 직후에 위치해야되는걸 반드시 확실히해라***
+
+## Thymeleaf Security
+### extras spring security
+[thymeleaf extras spring security](https://github.com/thymeleaf/thymeleaf-extras-springsecurity)
+[extras springsecurity 잘 정리된 문서](https://www.javadevjournal.com/spring-security/spring-security-with-thymeleaf/)
+
+- 유틸리티 객체 표현법 사용
+```html
+<div th:text="${#authentication.name}">
+  The value of the "name" property of the authentication object should appear here.
+</div>
+<div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+  This will only be displayed if authenticated user has role ROLE_ADMIN.
+</div>
+```
+
+```#authorization```는 ```org.thymeleaf.extras.springsecurity[5|6].auth.Authorization```의 객체이다.
+
+- 어트리뷰트 사용하기 
+```sec:authentication``` 어트리뷰트는 ```#authorization```랑 같다. 사용법만 다름
+```html
+<div sec:authentication="name">
+  The value of the "name" property of the authentication object should appear here.
+</div>
+```
+
+```sec:authorize```와 ```sec:authorize-expr```어트리뷰트는 같다. 
+스프링 시큐러티 expression에서 ```th:if```는 유틸리티 객체 표현법에서 ```#authorization.expression(...)```와 같은기능 제공.
+
+- 네임스페이스
+dialect의 모든 버전의 네임스페이스는 ```http://www.thymeleaf.org/extras/spring-security```이다.
+
+잘못된 네임스페이스를 가져오는 것은 템플릿 처리에 영향을 미치지 않지만, 템플릿의 제안/자동완성 같은 IDE에 영향을 줄 수 있다.
+
+## Thymeleaf layout dialet
+[thymeleaf layout dialet 정리 잘 된 문서](https://ultraq.github.io/thymeleaf-layout-dialect/)
+
+```layout:decorate="~{layouts/default}"```
+```layout:decorate```을 사용햐서, 페이지를 연결한다. 얘는 페이지의 루트 요소를 기준으로 동작한다. 
+
+controller에서 응답페이지는 content 경로를 잡아주면된다. 헉헉
 
 ## 컴포넌트스캔
 
