@@ -32,13 +32,23 @@ public class File {
 
     protected File() {}
 
-    public File(User user, Type type, String name, Kind kind, Long size) {
+    private File(User user, Type type, String name, Kind kind, Long size) {
         this.user = user;
         this.type = type;
         this.name = name;
         this.size = size;
         this.kind = kind;
         lastUpdated = LocalDateTime.now();
+    }
+
+    /** TODO test용 표시하기 */
+    public File(User user, Type type, String name, Kind kind, Long size, LocalDateTime lastUpdated) {
+        this.user = user;
+        this.type = type;
+        this.name = name;
+        this.size = size;
+        this.kind = kind;
+        this.lastUpdated = lastUpdated;
     }
 
     public static File createFile(User user, Type type, String name, Kind kind, Long size){

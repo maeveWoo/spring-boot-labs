@@ -16,6 +16,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,21 +38,23 @@ class FileHandlingTest {
     private FileHandling fileHandling;
 
     @Test
-    @DisplayName("사용자가 올린 이미지파일 전체조회")
+    @DisplayName("사용자가 올린 이미지파일 전체조회 - 최신순")
     public void fileList() {
         User user = createUser();
 
         List<File> testList = new ArrayList();
-        testList.add(File.createFile(user, Type.Image, "test2", Kind.PNG, 7700L));
-        testList.add(File.createFile(user, Type.Image, "test1", Kind.PNG, 2000L));
-        testList.add(File.createFile(user, Type.Image, "test3", Kind.PNG, 4000L));
-        testList.add(File.createFile(user, Type.Image, "test4", Kind.PNG, 5100L));
-        testList.add(File.createFile(user, Type.Image, "test5", Kind.PNG, 5500L));
+        testList.add(new File(user, Type.Image, "test1", Kind.PNG, 7700L,LocalDateTime.of(LocalDate.now(), LocalTime.of(1, 0))));
+        testList.add(new File(user, Type.Image, "test2", Kind.PNG, 2000L,LocalDateTime.of(LocalDate.now(), LocalTime.of(2, 0))));
+        testList.add(new File(user, Type.Image, "test3", Kind.PNG, 4000L,LocalDateTime.of(LocalDate.now(), LocalTime.of(3, 0))));
+        testList.add(new File(user, Type.Image, "test4", Kind.PNG, 5100L,LocalDateTime.of(LocalDate.now(), LocalTime.of(4, 0))));
+        testList.add(new File(user, Type.Image, "test5", Kind.PNG, 5500L,LocalDateTime.of(LocalDate.now(), LocalTime.of(5, 0))));
         fileRepository.saveAll(testList);
 
         List<File> fileList = fileHandling.findListBy(user.getId());
         assertThat(fileList.size()).isEqualTo(5);
         assertThat(fileList).extracting("type").containsOnly(Type.Image);
+        assertThat(fileList.get(0).getName()).isEqualTo("test5");
+        assertThat(fileList.get(4).getName()).isEqualTo("test1");
     }
 
     @Test
