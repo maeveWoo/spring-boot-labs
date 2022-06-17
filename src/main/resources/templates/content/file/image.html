@@ -29,9 +29,17 @@
                         image 파일 뚱딱 뚱딱
                     </p>
                     <p>
-                        <a href="#" class="btn btn-primary my-2">이미지 올리기</a>
+                        <a href="#" class="btn btn-primary my-2">뀨</a>
                         <a href="#" class="btn btn-secondary my-2">조건걸어서 보기</a>
                     </p>
+                    <form class="imageForm">
+                        <div class="input-group">
+                            <input class="form-control" aria-label="Upload"
+                                   type="file" name="image" accept="image/png, image/jpeg, image/jpg">
+                            <button class="btn btn-outline-secondary" type="button" id="imageUpload">이미지 올리기</button>
+                        </div>
+                        <small>png, jpeg, jpg을 올려주세요</small>
+                    </form>
                 </div>
             </div>
         </section>
@@ -59,5 +67,28 @@
             </div>
         </div>
     </section>
-</th:block>>
+    <script>
+        const imageUploadBtn = document.querySelector('#imageUpload');
+        function uploadImage() {
+            const imageForm = document.querySelector('.imageForm');
+            let imageFormData = new FormData(imageForm);
+
+            fetch('/file/image', {
+               method: 'POST',
+                headers: {
+                },
+                body: imageFormData
+            })
+                .then(data => {
+                    console.log(data);
+                    location.reload();
+                })
+                .catch(error => {
+                    alert(error);
+                });
+        }
+
+        imageUploadBtn.addEventListener('click', uploadImage);
+    </script>
+</th:block>
 </html>

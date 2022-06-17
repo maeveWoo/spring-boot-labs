@@ -21,10 +21,10 @@
                     File Handling
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" th:href="@{/file/image}">Image</a></li>
-                    <li><a class="dropdown-item" th:href="@{/file/bmp}">BMP</a></li>
+                    <li><a class="dropdown-item" th:href="@{/file/images}">Image</a></li>
+                    <li><a class="dropdown-item" th:href="@{/file/bmps}">BMP</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" th:href="@{/file/mp3}">MP3</a></li>
+                    <li><a class="dropdown-item" th:href="@{/file/mp3s}">MP3</a></li>
                 </ul>
             </li>
             <li sec:authorize="hasAnyRole('ADMIN','WRITE_ADMIN','SUPER_ADMIN')" class="nav-item dropdown">
@@ -40,11 +40,11 @@
             </li>
         </ul>
         <form class="d-flex">
-            <button sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-sm btn-outline-primary mx-2" type="button">login</button>
-            <button sec:authorize="isAnonymous()" th:href="@{/sign-up}" class="btn btn-sm btn-outline-success mx-2" type="button">sign up</button>
-            <button sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-sm btn-outline-warning mx-2" type="button">logout</button>
+            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-sm btn-outline-primary mx-2" type="button">login</a>
+            <a sec:authorize="isAnonymous()" th:href="@{/sign-up}" class="btn btn-sm btn-outline-success mx-2" type="button">sign up</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-sm btn-outline-warning mx-2" type="button">logout</a>
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
+            <button class="btn btn-outline-primary" type="button">Search</button>
         </form>
     </div>
 </nav>

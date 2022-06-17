@@ -3,13 +3,11 @@ package io.springbootlabs.app.web.in;
 import io.springbootlabs.domain.usecase.FileHandling;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/file")
@@ -17,11 +15,16 @@ import java.util.Map;
 public class FileController {
     private final FileHandling fileHandling;
 
-    @GetMapping("/image")
-    public ModelAndView getImage(Principal principal) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("images", fileHandling.findListByUser(Long.parseLong(principal.getName())));
-        return new ModelAndView("content/file/image", map);
+    @GetMapping("/images")
+    public String getImage(Principal principal, final Model mode) {
+        mode.addAttribute("images", fileHandling.findListBy(userId(principal)));
+        return "content/file/image";
+    }
+
+    @PostMapping("/image")
+    @ResponseBody
+    public void uploadImage(@RequestParam("image")MultipartFile multipartFile, Principal principal) {
+        fileHandling.save(userId(principal), multipartFile);
     }
 
     @GetMapping("/bmp")
@@ -32,5 +35,9 @@ public class FileController {
     @GetMapping("/mp3")
     public String getMp3() {
         return "content/file/mp3";
+    }
+
+    private Long userId(Principal principal) {
+        return Long.parseLong(principal.getName());
     }
 }
