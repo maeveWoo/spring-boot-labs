@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ErrorController {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public void exception(final Throwable throwable, final Model model) {
+    public String exception(final Throwable throwable, final Model model) {
         log.error("unKnown Exception occur!");
         model.addAttribute("errorMessage", throwable != null ? throwable.getMessage() : "Unknown error");
+        return "error";
     }
-
 }
