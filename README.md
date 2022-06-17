@@ -12,6 +12,12 @@
 - [라이브템플릿 세팅](#라이브템플릿-세팅)
 
 ---
+- [MockMvc Multipart POST request Test](#MockMvc-Multipart-POST-request-Test)
+
+---
+- [프로젝트 구조](#프로젝트-구조)
+
+---
 - [의문 리스트](#의문-리스트)
 
 ## SpringBoot기초
@@ -423,6 +429,8 @@ public class ApplicationConfigurerAdapter extends WebSecurityConfigurerAdapter {
 스프링 부트 MVC 어플리케이션은(thymeleaf, spring-boot-starter-web 이 추가된) 파일 업로드를 하기 위해서는 "MultipartConfigElement"를 등록해야한다.
 스부는 모두 auto-config!
 
+- [참고자료] (https://howtodoinjava.com/java/io/reading-large-files/)
+
 ### Flash Attribute
 참고 자료들
 - [spring docs](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-flash-attributes)
@@ -538,6 +546,13 @@ public void $EXPR$() {
     org.assertj.core.api.Assertions.assertThat($END$)
 }
 ```
+---
+## MockMvc Multipart POST request Test
+- [baeldung 참고자료](https://www.baeldung.com/spring-multipart-post-request-test)
+
+---
+## 프로젝트 구조
+
 
 ---
 
