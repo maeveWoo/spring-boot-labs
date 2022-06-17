@@ -18,7 +18,6 @@ public enum Type {
         assert contentType != null;
         String[] split = contentType.split("/");
 
-
         if (split.length > 1) {
             if (split[0].equals(Type.Text.name().toLowerCase())) {
                 return Type.Text;
@@ -26,11 +25,12 @@ public enum Type {
             if (split[1].equals(Type.Bmp.name().toLowerCase())) {
                 return Type.Bmp;
             }
-            return Type.Image;
-        }
-        if (split[0].equals(Type.Mp3.name().toLowerCase())){
+            if (split[0].equals(Type.Image.name().toLowerCase())){
+                return Type.Image;
+            }
             return Type.Mp3;
         }
+
         throw new MissingFormatArgumentException(contentType);
     }
 }

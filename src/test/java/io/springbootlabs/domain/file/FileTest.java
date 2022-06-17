@@ -10,7 +10,6 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FileTest {
-
     @Test
     public void textFileTypeCheck() {
         MockMultipartFile file = new MockMultipartFile(
@@ -20,6 +19,7 @@ class FileTest {
                 "hello".getBytes()
         );
         assertThat(Type.filterType(file)).isEqualTo(Type.Text);
+        assertThat(Kind.valueOfName(file.getContentType()).getName()).isEqualTo(MediaType.TEXT_PLAIN_VALUE);
     }
 
     @Test
@@ -32,6 +32,7 @@ class FileTest {
                 image10mbJpg.getInputStream()
         );
         assertThat(Type.filterType(file)).isEqualTo(Type.Image);
+        assertThat(Kind.valueOfName(file.getContentType()).getName()).isEqualTo(MediaType.IMAGE_JPEG_VALUE);
     }
 
     @Test
@@ -40,10 +41,11 @@ class FileTest {
         MockMultipartFile file = new MockMultipartFile(
                 "test",
                 "10mb.jpeg",
-                "image/bmp",
+                Kind.IMAGE_BMP_VALUE,
                 image10mbJpg.getInputStream()
         );
         assertThat(Type.filterType(file)).isEqualTo(Type.Bmp);
+        assertThat(Kind.valueOfName(file.getContentType()).getName()).isEqualTo(Kind.IMAGE_BMP_VALUE);
     }
 
     @Test
@@ -53,9 +55,10 @@ class FileTest {
         MockMultipartFile file = new MockMultipartFile(
                 "test",
                 "10mb.mp3",
-                "mp3",
+                Kind.AUDEO_MP3_VALUE,
                 image10mbJpg.getInputStream()
         );
         assertThat(Type.filterType(file)).isEqualTo(Type.Mp3);
+        assertThat(Kind.valueOfName(file.getContentType()).getName()).isEqualTo(Kind.AUDEO_MP3_VALUE);
     }
 }
