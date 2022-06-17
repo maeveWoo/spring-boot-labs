@@ -5,28 +5,29 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <th:block layout:fragment="content">
-    <section>
-<!--        <div th:if="${param.error}">-->
-<!--            Invalid username and password.-->
-<!--        </div>-->
-<!--        <div th:if="${param.logout}">-->
-<!--            You have been logged out.-->
-<!--        </div>-->
-        <form th:action="@{/login}" method="post">
-            <div class="mb-3 row">
-                <label class="col-sm-1 col-form-label"> User ID :</label>
-                <div class="col-sm-3">
-                    <input class="form-control" type="text" name="username"/>
-                </div>
+    <section class="py-5 text-center container">
+        <div class="row">
+            <div class="col-lg-12 col-md-4 mx-auto">
+                <form th:action="@{/login}" method="post">
+                    <div class="mb-3 row">
+                        <label class="col-sm-1 col-form-label"> User ID :</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="text" name="username"/>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-1 col-form-label"> Password:</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="password" name="password"/>
+                        </div>
+                    </div>
+                    <div class="text-start">
+                        <button class="btn btn-outline-primary me-2" type="submit">Login</button>
+                        <button type="button" class="btn btn-outline-success">Sign-up</button>
+                    </div>
+                </form>
             </div>
-            <div class="mb-3 row">
-                <label class="col-sm-1 col-form-label"> Password:</label>
-                <div class="col-sm-3">
-                    <input class="form-control" type="password" name="password"/>
-                </div>
-                <div><button class="btn btn-primary mb-3" type="submit">Sign In</button></div>
-            </div>
-        </form>
+        </div>
     </section>
 </th:block>>
 </html>

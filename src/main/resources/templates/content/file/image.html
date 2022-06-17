@@ -20,30 +20,29 @@
     }
 </style>
 <th:block layout:fragment="content">
-    <section>
-        <section class="py-5 text-center container">
-            <div class="row">
-                <div class="col-lg-6 col-md-4 mx-auto">
-                    <h2 class="fw-light">Image File</h2>
-                    <p class="lead text-muted">
-                        image 파일 뚱딱 뚱딱
-                    </p>
-                    <p>
-                        <a href="#" class="btn btn-primary my-2">뀨</a>
-                        <a href="#" class="btn btn-secondary my-2">조건걸어서 보기</a>
-                    </p>
-                    <form class="imageForm">
-                        <div class="input-group">
-                            <input class="form-control" aria-label="Upload"
-                                   type="file" name="image" accept="image/png, image/jpeg, image/jpg">
-                            <button class="btn btn-outline-secondary" type="button" id="imageUpload">이미지 올리기</button>
-                        </div>
-                        <small>png, jpeg, jpg을 올려주세요</small>
-                    </form>
-                </div>
+    <section class="py-5 text-center container">
+        <div class="row">
+            <div class="col-lg-6 col-md-4 mx-auto">
+                <h2 class="fw-light">Image File</h2>
+                <p class="lead text-muted">
+                    image 파일 뚱딱 뚱딱
+                </p>
+                <p>
+                    <a href="#" class="btn btn-primary my-2">뀨</a>
+                    <a href="#" class="btn btn-secondary my-2">조건걸어서 보기</a>
+                </p>
+                <form class="imageForm">
+                    <div class="input-group">
+                        <input class="form-control" aria-label="Upload"
+                               type="file" name="image" accept="image/png, image/jpeg, image/jpg">
+                        <button class="btn btn-outline-secondary" type="button" id="imageUpload">이미지 올리기</button>
+                    </div>
+                    <small>png, jpeg, jpg을 올려주세요</small>
+                </form>
             </div>
-        </section>
-        <div class="album py-5 bg-light">
+        </div>
+    </section>
+    <div class="album py-5 bg-light">
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                     <div th:each="image: ${images}" class="col">
@@ -66,7 +65,6 @@
                 </div>
             </div>
         </div>
-    </section>
     <script>
         const imageUploadBtn = document.querySelector('#imageUpload');
         function uploadImage() {
@@ -80,7 +78,7 @@
                 body: imageFormData
             })
                 .then(data => {
-                    console.log(data);
+                    console.log('이미지가 저장되었습니당! 뿌우뿌우');
                     location.reload();
                 })
                 .catch(error => {

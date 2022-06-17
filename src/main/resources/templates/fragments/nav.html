@@ -40,10 +40,10 @@
             </li>
         </ul>
         <form class="d-flex">
-            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-sm btn-outline-primary mx-2" type="button">login</a>
-            <a sec:authorize="isAnonymous()" th:href="@{/sign-up}" class="btn btn-sm btn-outline-success mx-2" type="button">sign up</a>
-            <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-sm btn-outline-warning mx-2" type="button">logout</a>
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-primary btn-sm ms-2" type="button">login</a>
+            <a sec:authorize="isAnonymous()" th:href="@{/sign-up}" class="btn btn-outline-success btn-sm ms-2" type="button" style="width: 10em";>sign-up</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-outline-warning btn-sm ms-2" type="button">logout</a>
+            <input class="form-control me-2 ms-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-primary" type="button">Search</button>
         </form>
     </div>
